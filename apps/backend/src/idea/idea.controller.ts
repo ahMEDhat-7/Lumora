@@ -8,7 +8,7 @@ export class IdeaController {
   @Post()
   async create(@Body('idea') idea: string) {
     const created = await this.ideaService.create(idea);
-    return { id: created._id, sections: created.sections };
+    return { id: created._id, idea: created.idea, sections: created.sections };
   }
 
   @Get(':id')

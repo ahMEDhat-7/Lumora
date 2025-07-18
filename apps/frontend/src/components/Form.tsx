@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { Loader2, Eye } from 'lucide-react';
-import WebPreview from './WebPreview';
+import { Loader2 } from 'lucide-react';
 
 interface FormProps {
+  idea: string;
+  setIdea: (val: string) => void;
   onSuccess?: (sections: string[]) => void;
 }
 
-const Form = ({ onSuccess }: FormProps) => {
-  const [idea, setIdea] = useState('');
+const Form = ({ idea, setIdea, onSuccess }: FormProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showPreview, setShowPreview] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +27,8 @@ const Form = ({ onSuccess }: FormProps) => {
       });
       if (!res.ok) throw new Error('Failed to submit idea');
       const data = await res.json();
-      // Expecting data.sections to be an array
-      if (onSuccess) onSuccess(Array.isArray(data.sections) ? data.sections : []);
+      // Expecting data to be the full idea object
+      if (onSuccess) onSuccess(data);
       setIdea('');
     } catch (err) {
       setError('Something went wrong.');
@@ -49,15 +48,7 @@ const Form = ({ onSuccess }: FormProps) => {
         disabled={loading}
       />
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <div className="flex justify-center gap-4">
-        <button
-          type="button"
-          onClick={() => setShowPreview(!showPreview)}
-          className="bg-gray-600 text-white px-4 py-2 rounded-2xl hover:bg-gray-800 transition flex items-center justify-center"
-        >
-          <Eye className="h-5 w-5 mr-2" />
-          {showPreview ? 'Hide Preview' : 'Show Preview'}
-        </button>
+      <div className="flex justify-center gap-4 min-w-[500px]">
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-800 transition disabled:opacity-50 flex items-center justify-center min-w-[110px]"
@@ -71,11 +62,6 @@ const Form = ({ onSuccess }: FormProps) => {
           ) : 'Submit'}
         </button>
       </div>
-      {showPreview && (
-        <div className="mt-8 border rounded-lg overflow-hidden">
-          <WebPreview />
-        </div>
-      )}
     </form>
   );
 };

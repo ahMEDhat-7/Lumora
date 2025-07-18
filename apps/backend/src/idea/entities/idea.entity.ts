@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Idea extends Document {
-  @Prop({  type: String, required: true })
+  @Prop({ type: String, required: true })
   idea!: string;
 
   @Prop({ type: [String], default: [] })

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Loader2, AlertCircle, Lightbulb  } from "lucide-react";
+import { Loader2, AlertCircle, Lightbulb } from "lucide-react";
+import WebPreview from './WebPreview';
+import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 3;
 
@@ -9,13 +11,14 @@ const Preview = () => {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+
   const filteredIdeas = ideas.filter((idea) => {
     const searchWord = search.toLowerCase();
     const match = idea.idea.toLowerCase().includes(searchWord);
     return match;
   });
-  
+
   const totalPages = Math.ceil(filteredIdeas.length / PAGE_SIZE);
 
   useEffect(() => {
@@ -41,6 +44,8 @@ const Preview = () => {
   useEffect(() => {
     setPage(1);
   }, [search]);
+
+  const navigate = useNavigate();
 
   return (
     <div className="h-screen flex justify-center p-3">
@@ -80,7 +85,18 @@ const Preview = () => {
                     <Lightbulb className="h-5 w-5 text-purple-500" />
                     <span className="font-medium text-gray-800">{idea.idea || idea.text || 'Untitled Idea'}</span>
                   </div>
-                  {Array.isArray(idea.sections) && idea.sections.length > 0 && ( 
+                  <button
+                    className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm self-start mb-2 hover:bg-blue-800 transition"
+                    onClick={() => navigate(`/ideas/${idea.id || idx}/preview`, { state: { idea } })}
+                  >
+                    Preview
+                  </button>
+                  {previewIndex === idx && (
+                    <div className="mt-2">
+                      <WebPreview sections={idea.sections} />
+                    </div>
+                  )}
+                  {Array.isArray(idea.sections) && idea.sections.length > 0 && (
                     <ul className="flex flex-col gap-1 ml-4 list-disc text-gray-600">
                       {idea.sections.map((section: any, sidx: number) => (
                         <li key={sidx}>
@@ -100,7 +116,7 @@ const Preview = () => {
             <div className="flex flex-col items-center justify-center py-12">
               <Lightbulb className="h-16 w-16 mb-2 opacity-60 text-purple-400" />
               <p className="text-gray-600 italic">
-                {ideas.length === 0 
+                {ideas.length === 0
                   ? "No ideas to display yet.\nStart by submitting your first idea!"
                   : `No ideas found matching "${search}"`
                 }

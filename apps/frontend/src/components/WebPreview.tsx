@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Section {
   title: string;
@@ -7,38 +7,65 @@ interface Section {
 
 interface WebPreviewProps {
   sections?: Section[];
+  idea?: string;
 }
 
+const defaultSections: Section[] = [];
+
 const WebPreview = ({ sections = [] }: WebPreviewProps) => {
-  // Dummy sections if none provided
-  const [displaySections, setDisplaySections] = useState<Section[]>([
-    { title: 'Hero', content: 'Welcome to our amazing platform' },
-    { title: 'About', content: 'Learn more about what we do' },
-    { title: 'Contact', content: 'Get in touch with us' }
-  ]);
+  const [displaySections, setDisplaySections] = useState<Section[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    if (sections.length > 0) {
-      setDisplaySections(sections);
+    if (!sections || sections.length === 0) {
+      setDisplaySections(defaultSections);
+      return;
+    }
+    const first = sections[0] as unknown;
+    if (typeof first === 'string') {
+      setDisplaySections((sections as unknown as string[]).map(title => ({ title, content: '' })));
+    } else {
+      setDisplaySections(sections as Section[]);
     }
   }, [sections]);
 
+  const handleNavClick = (idx: number) => {
+    setActiveIndex(idx);
+    sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  };
+
   return (
-    <div className="bg-white p-4">
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {displaySections.map((section, index) => (
-          <section
-            key={section.title}
-            className={`flex-shrink-0 w-[300px] h-[400px] flex flex-col p-6 rounded-lg ${
-              index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-            } border border-gray-200 shadow-sm`}
+    <div className="bg-white rounded-lg shadow p-6 space-y-2">
+      <nav className="flex gap-2 mb-4 border-b pb-2">
+        {displaySections.map((section, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleNavClick(idx)}
+            className={`px-4 py-2 rounded-t-lg font-semibold transition-colors whitespace-nowrap ${activeIndex === idx
+              ? 'bg-blue-600 text-white shadow border-blue-600'
+              : 'bg-gray-100 text-gray-700 hover:bg-blue-100 border-transparent'
+              } border-b-2 focus:outline-none`}
           >
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">{section.title}</h2>
+            {section.title}
+          </button>
+        ))}
+      </nav>
+      <div className="flex gap-2 overflow-x-auto pb-4">
+        {activeIndex !== null && displaySections[activeIndex] && (
+          <section
+            key={displaySections[activeIndex].title}
+            className={`w-[300px] h-[400px] flex flex-col p-6 rounded-lg border shadow-sm transition ${{
+              0: 'bg-gray-50',
+              1: 'bg-white',
+            }[activeIndex % 2] || 'bg-white'} border-blue-500 ring-2 ring-blue-300`}
+          >
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">{displaySections[activeIndex].title}</h2>
             <div className="prose flex-grow">
-              <p className="text-gray-600">{section.content}</p>
+              <p className="text-gray-600">{displaySections[activeIndex].content}</p>
             </div>
           </section>
-        ))}
+        )}
       </div>
     </div>
   );
