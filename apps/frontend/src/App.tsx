@@ -8,8 +8,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 export default function App() {
   function Home() {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700">
-        <main className="max-w-2xl w-full p-4 space-y-6">
+      <div className="h-full flex items-center justify-center">
+        <main className="max-w-2xl w-full p-4">
           <Form />
         </main>
       </div>
@@ -17,12 +17,12 @@ export default function App() {
   }
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="h-screen flex flex-col bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700">
         <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/ideas" element={<Preview />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ideas" element={<Preview />} />
+          </Routes>
       </div>
     </Router>
   );
