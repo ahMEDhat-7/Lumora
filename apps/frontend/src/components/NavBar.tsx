@@ -7,10 +7,10 @@ function NavBar() {
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-gray-200 shadow-sm">
       <div className="max-w-2xl mx-auto flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-50">
-          <Link to="/">
+          <Link to="/" className="flex items-center gap-7">
             <img src="/stunningLogo.gif" alt="Logo" className="h-12 w-12 rounded-full" />
+            <h1 className="text-2xl font-semibold tracking-tight hover:text-fuchsia-700 transition-colors duration-300">Lumora</h1>
           </Link>
-          <h1 className="text-2xl font-semibold tracking-tight text-gray-800">Lumora</h1>
         </div>
         <div>
           <Link

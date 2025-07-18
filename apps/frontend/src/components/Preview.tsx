@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, AlertCircle, Lightbulb  } from "lucide-react";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 3;
 
 const Preview = () => {
   const [ideas, setIdeas] = useState<any[]>([]);
