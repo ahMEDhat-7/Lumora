@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye } from 'lucide-react';
+import WebPreview from './WebPreview';
 
 interface FormProps {
   onSuccess?: (sections: string[]) => void;
@@ -9,6 +10,7 @@ const Form = ({ onSuccess }: FormProps) => {
   const [idea, setIdea] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,10 +49,18 @@ const Form = ({ onSuccess }: FormProps) => {
         disabled={loading}
       />
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => setShowPreview(!showPreview)}
+          className="bg-gray-600 text-white px-4 py-2 rounded-2xl hover:bg-gray-800 transition flex items-center justify-center"
+        >
+          <Eye className="h-5 w-5 mr-2" />
+          {showPreview ? 'Hide Preview' : 'Show Preview'}
+        </button>
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded-2xl  hover:bg-blue-800 transition disabled:opacity-50 flex items-center justify-center min-w-[110px]"
+          className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-800 transition disabled:opacity-50 flex items-center justify-center min-w-[110px]"
           disabled={loading}
         >
           {loading ? (
@@ -61,6 +71,11 @@ const Form = ({ onSuccess }: FormProps) => {
           ) : 'Submit'}
         </button>
       </div>
+      {showPreview && (
+        <div className="mt-8 border rounded-lg overflow-hidden">
+          <WebPreview />
+        </div>
+      )}
     </form>
   );
 };
