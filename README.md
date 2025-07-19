@@ -1,4 +1,4 @@
-# Lumora 
+# Lumora - someone who inspires
 
 Lumora is a comprehensive web application consisting of a React frontend and NestJS backend for managing ideas and content.
 
