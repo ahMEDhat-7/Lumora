@@ -175,6 +175,28 @@ npm run build
 npm start
 ```
 
+## Docker
+
+You can build and run the entire application using Docker. Make sure you have Docker installed.
+
+### Build the Docker image
+
+```bash
+docker build -t lumora-app .
+```
+
+### Run the Docker container
+
+```bash
+docker run -p 3000:3000 lumora-app
+```
+
+The backend server will be available at `http://localhost:3000`.
+
+> **Note:**
+> - Ensure your MongoDB instance is accessible to the container. You may want to use Docker Compose for a full stack (API + DB) setup.
+> - You can set environment variables (e.g., database connection) using the `-e` flag or a `.env` file.
+
 ## Contributing
 
 We welcome contributions! Please follow these steps:
